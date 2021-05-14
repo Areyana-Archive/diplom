@@ -1,22 +1,80 @@
 % Encoding: UTF-8
 
-@BOOK{econ,
-  title = {Экономическое обоснование проекта по разработке программного обеспечения},
+@Book{econ1,
+  author    = {Горовой В.Г., Грицай А.В., Пархименко В.А.},
   publisher = {кафедра экономики БГУИР},
-  year = {2018},
-  author = {Горовой В.Г., Грицай А.В., Пархименко В.А.},
-  owner = {mstyura},
-    language = {russian},
-  pages={12},
-  timestamp = {2020.03.21}
+  title     = {Экономическое обоснование проекта по разработке программного обеспечения},
+  year      = {2018},
+  language  = {russian},
+  owner     = {mstyura},
+  pages     = {12},
+  timestamp = {2020.03.21},
 }
 
-@MISC{web3,
-  title = {Sheriff, Paul D. Designing for Web or Desktop? [Электронный ресурс]},
+@Misc{web1,
   howpublished = {Электронные данные},
-  note = {Режим доступа: \url{https://nurelm.com/webbased-vs-desktop-software/}. --- Дата
-  доступа: 08.05.2013},
-  owner = {mstyura},
+  note         = {Режим доступа: \url{https://nurelm.com/webbased-vs-desktop-software/}. --- Дата доступа: 08.05.2013},
+  title        = {Sheriff, Paul D. Designing for Web or Desktop? [Электронный ресурс]},
+  owner        = {mstyura},
+}
+
+@Misc{web2,
+  howpublished = {Электронные данные},
+  note         = {Режим доступа: \url{https://vc.ru/dev/66728-google-obyavila-kotlin-prioritetnym-yazykom-programmirovaniya-dlya-razrabotki-android-prilozheniy/}. --- Дата доступа: 07.05.2019},
+  title        = {Google объявила Kotlin приоритетным языком программирования для разработки Android-приложений [Электронный ресурс]},
+}
+
+@Misc{web3,
+  howpublished = {Электронные данные},
+  note         = {Режим доступа: \url{https://habr.com/ru/post/332562/}},
+  title        = {Android Architecture Components. Часть 1. Введение [Электронный ресурс]},
+}
+
+@Misc{web4,
+  howpublished = {Электронные данные},
+  note         = {Режим доступа: \url{https://ru.wikipedia.org/wiki/Диаграмма_классов/}},
+  title        = {Диаграмма классов [Электронный ресурс]},
+}
+
+@Misc{web5,
+  howpublished = {Электронные данные},
+  note         = {Режим доступа: \url{https://aws.amazon.com/ru/relational-database/}},
+  title        = {Что такое реляционная база данных? [Электронный ресурс]},
+}
+
+@Misc{web6,
+  howpublished = {Электронные данные},
+  note         = {Режим доступа: \url{https://www.lucidchart.com/pages/ru/erd-диаграмма/}},
+  title        = {Что такое ER-диаграмма и как ее создать? [Электронный ресурс]},
+}
+
+@Misc{web7,
+  howpublished = {Электронные данные},
+  note         = {Режим доступа: \url{https://proglib.io/p/clean-architecture-android-apps/}},
+  title        = {Подробный гайд по разработке Android-приложений с помощью Clean Architecture. [Электронный ресурс]},
+}
+
+@Misc{web8,
+  howpublished = {Электронные данные},
+  note         = {Режим доступа: \url{https://startandroid.ru/ru/courses/architecture-components/27-course/architecture-components/525-urok-2-livedata.html}},
+  title        = {Start Android – учебник по Android для начинающих и продвинутых. Урок 2. LiveData [Электронный ресурс]},
+}
+
+@Misc{web9,
+  howpublished = {Электронные данные},
+  note         = {Режим доступа: \url{Режим доступа: \url{https://startandroid.ru/ru/courses/architecture-components/27-course/architecture-components/525-urok-2-livedata.html}}},
+  title        = {Тестирование программного обеспечения [Электронный ресурс]},
+}
+
+@Book{econ,
+  author    = {Палицын В. А.},
+  publisher = {БГУИР},
+  title     = {Технико-экономическое обоснование дипломных проектов: Метод. пособие для студ. всех спец. БГУИР в 4-х ч. Ч. 4: Проекты программного обеспечения.},
+  year      = {2006},
+  language  = {russian},
+  owner     = {mstyura},
+  pages     = {76},
+  timestamp = {2020.03.21},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
