@@ -9,11 +9,699 @@
 
 \newpage
 \phantomsection
-\addcontentsline{toc}{section}{Приложение А Работа с Firebase}
-
+\addcontentsline{toc}{section}{Приложение А (обязательное) Листинг программного обеспечения}
 \begin{center}
     \textbf{\MakeUppercase{Приложение А}\\
-    Работа с Firebase}
+    (обязательное)\\
+    Листинг программного обеспечения }
+\end{center}
+
+ \newcounter{alphasect}
+
+ \renewcommand\thesection{%
+ \ifnum\value{alphasect}=1%
+A%%
+ \else
+\ifnum\value{alphasect}=2%
+B%%
+\else
+\ifnum\value{alphasect}=3%
+C%%
+\else
+\ifnum\value{alphasect}=4%
+D%%
+\else
+ \arabic{section}%%
+ \fi\fi\fi\fi}%
+
+ \newenvironment{asection}{%
+ \setcounter{alphasect}{1}%%
+ }{%
+ \setcounter{alphasect}{0}%%
+ }%
+
+ \newenvironment{bsection}{%
+ \setcounter{alphasect}{2}%%
+ }{%
+ \setcounter{alphasect}{0}%%
+ }%
+
+\begin{asection}
+
+\setlength{\parindent}{0ex}
+\begin{lstlisting}[language=Java,label={lst:add:a_1}, caption={BaseActivity}]
+abstract class BaseActivity<T : BaseViewModel> : BaseActivity() {
+    protected abstract val viewModel: T
+
+    private lateinit var progressDialog: ProgressDialog
+
+    private lateinit var errorDialog: MaterialDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setUpDialogs()
+        observeUiChanges()
+    }
+
+    private fun setUpDialogs() {
+        progressDialog = ProgressDialog()
+        errorDialog = MaterialDialog(this).apply {
+            positiveButton(text = "Ok")
+        }
+    }
+
+    private fun observeUiChanges() {
+        viewModel.apply {
+            progress.observe(
+                this@BaseActivity,
+                { progress ->
+                    handleProgress(progress = progress)
+                }
+            )
+
+            errorEvent.observe(
+                this@BaseActivity,
+                { error ->
+                    handleAhriError(ahriError = error)
+                }
+            )
+        }
+    }
+
+    @Synchronized
+    fun handleProgress(
+        fragmentManager: FragmentManager = supportFragmentManager,
+        progress: Boolean
+    ) {
+        if (progress) {
+            if (!progressDialog.isAdded) {
+                progressDialog.show(fragmentManager, ProgressDialog::class.java.canonicalName)
+                fragmentManager.executePendingTransactions()
+            }
+        } else {
+            if (progressDialog.isAdded) {
+                progressDialog.dismissAllowingStateLoss()
+                fragmentManager.executePendingTransactions()
+            }
+        }
+    }
+
+    @Synchronized
+    fun handleAhriError(
+        fragmentManager: FragmentManager = supportFragmentManager,
+        ahriError: AhriError
+    ) {
+        handleError(fragmentManager, ahriError, ahriError.retryAction)
+    }
+
+    private fun handleError(
+        fragmentManager: FragmentManager = supportFragmentManager,
+        error: AhriError,
+        retryAction: (() -> Unit)?
+    ) {
+        errorDialog.show {
+            message(text = error.exception.message)
+        }
+    }
+}
+\end{lstlisting}
+\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_2}, caption={BaseFragment}]
+abstract class BaseFragment<T : BaseViewModel> : BaseFragment() {
+    protected abstract val viewModel: T
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        observeUiEvents()
+    }
+
+    override fun onDestroyView() {
+        hideKeyboard()
+        requireActivity().currentFocus?.hideKeyboard()
+        super.onDestroyView()
+    }
+
+    private fun observeUiEvents() {
+        viewModel.apply {
+            progress.observe(
+                viewLifecycleOwner,
+                { progress ->
+                    (activity as BaseActivity<*>).handleProgress(
+                        fragmentManager = childFragmentManager,
+                        progress = progress
+                    )
+                }
+            )
+
+            errorEvent.observe(
+                viewLifecycleOwner,
+                { error ->
+                    (activity as BaseActivity<*>).handleAhriError(
+                        fragmentManager = childFragmentManager,
+                        ahriError = error
+                    )
+                }
+            )
+        }
+    }
+
+    fun checkPermission(permission: String, requestPermissionCode: Int): Boolean {
+        return if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(permission)) {
+                requestPermissions(arrayOf(permission), requestPermissionCode)
+            } else {
+                requestPermissions(arrayOf(permission), requestPermissionCode)
+            }
+
+            false
+        } else {
+            true
+        }
+    }
+
+    protected fun openGoToSettingPermissionDialog(activityResultLauncher: ActivityResultLauncher<Intent>) {
+        MaterialDialog(requireContext()).apply {
+            title(res = R.string.base_dialog_title_runtime_permission_is_denied)
+            message(text = getString(R.string.base_dialog_text_go_to_application_settings))
+            cancelable(false)
+            positiveButton(
+                res = R.string.action_go_to_settings,
+                click = {
+                    val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", requireContext().packageName, null)
+                    intent.data = uri
+                    activityResultLauncher.launch(intent)
+                }
+            )
+            negativeButton(res = R.string.action_cancel, click = { /* Nothing */ })
+        }.show()
+    }
+}
+\end{lstlisting}
+\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_3}, caption={BaseViewModel}]
+open class BaseViewModel : ViewModel(), CoroutineScope {
+
+    val progress: MutableLiveData<Boolean> = MutableLiveData()
+
+    override val coroutineContext = SupervisorJob() + Dispatchers.Main
+
+    val errorEvent: LiveEvent<AhriError> = LiveEvent()
+
+    suspend fun handleLoading(
+        scope: CoroutineScope = viewModelScope,
+        progress: MutableLiveData<Boolean> = this@BaseViewModel.progress,
+        actionUseCase: Any? = null,
+        block: suspend () -> Unit,
+    ) {
+        handleLoading(
+            progress = progress,
+            block = block,
+            retryAction = {
+                scope.launch {
+                    handleLoading(scope, progress, actionUseCase, block)
+                }
+            }
+        )
+    }
+
+    private suspend fun handleLoading(
+        progress: MutableLiveData<Boolean> = this@BaseViewModel.progress,
+        block: suspend () -> Unit,
+        retryAction: () -> Unit
+    ) {
+        handleErrors(
+            block = {
+                try {
+                    progress.value = true
+                    block()
+                } finally {
+                    progress.value = false
+                }
+            },
+            retryAction = retryAction
+        )
+    }
+
+    suspend fun handleErrors(
+        scope: CoroutineScope = viewModelScope,
+        block: suspend () -> Unit,
+    ) {
+        handleErrors(
+            block = block,
+            retryAction = {
+                scope.launch {
+                    handleErrors(scope, block)
+                }
+            }
+        )
+    }
+
+    private suspend fun handleErrors(
+        block: suspend () -> Unit,
+        retryAction: () -> Unit
+    ) {
+        try {
+            block()
+        } catch (ex: Throwable) {
+            errorEvent.value = AhriError(ex, retryAction)
+
+            Timber.tag("debug").e(ex.message ?: "")
+        }
+    }
+}
+\end{lstlisting}
+\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_4}, caption={Koin}]
+var gatewayModule = module {
+    single<PreferencesGateway> {
+        PreferencesGatewayImpl(preferenceDataSource = get())
+    }
+    single<StoresGateway> {
+        StoresGatewayImpl(
+            storesDataSource = get(),
+            networkService = get(),
+            storesDao = get()
+        )
+    }
+    single<DealsGateway> {
+        DealsGatewayImpl(
+            dealsDataSource = get(),
+            storesGateway = get(),
+            favoriteDao = get(),
+            dealDao = get()
+        )
+    }
+    single<GamesGateway> {
+        GamesGatewayImpl(
+            gamesDataSource = get(),
+            networkService = get(),
+            storesGateway = get(),
+            favoriteGameDao = get(),
+            gameDao = get()
+        )
+    }
+    single<AuthGateway> {
+        AuthGatewayImpl()
+    }
+    single<StoriesGateway> {
+        StoriesGatewayImpl()
+    }
+    single<BannersGateway> {
+        BannersGatewayImpl()
+    }
+    single<RssGateway> {
+        RssGatewayImpl(rssApi = get())
+    }
+}
+\end{lstlisting}
+\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_5}, caption={AndroidManifest.xml}]]
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="com.lust.ahri">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+            android:name=".App"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme">
+
+        <activity
+                android:name="com.lust.ahri.view.main.MainActivity"
+                android:label="@string/app_name"
+                android:screenOrientation="portrait" />
+
+        <activity
+                android:name=".view.auth.AuthActivity"
+                android:screenOrientation="portrait" />
+
+        <activity
+                android:name=".view.onboarding.OnboardingActivity"
+                android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+                android:name=".core.service.firebase.AhriMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <provider
+                android:name="br.com.mauker.materialsearchview.db.HistoryProvider"
+                android:authorities="br.com.mauker.materialsearchview.searchhistorydatabase"
+                android:exported="false"
+                android:protectionLevel="signature"
+                android:syncable="true"/>
+
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="${applicationId}.fileprovider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>
+\end{lstlisting}
+\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_6}, caption={AuthSignInViewModel}]
+class AuthSignInViewModel(
+    private val validateEmail: ValidateEmail,
+    private val validatePassword: ValidatePassword,
+    private val signIn: SignIn
+) : BaseViewModel() {
+    val password: MutableLiveData<String> = MutableLiveData()
+    val email: MutableLiveData<String> = MutableLiveData()
+
+    private val _initSignInEvent: LiveEvent<Nothing> = LiveEvent()
+    val initSignInEvent: LiveData<Nothing>
+        get() = _initSignInEvent
+
+    private val _openResetPasswordEvent: LiveEvent<Nothing> = LiveEvent()
+    val openResetPasswordEvent: LiveData<Nothing>
+        get() = _openResetPasswordEvent
+
+    val isSignUpDataValid: LiveData<Boolean> = combineLatest(email, password) {
+        val email = email.value
+        val password = password.value
+
+        if (email != null && password != null) {
+            return@combineLatest email.isNotEmpty() && password.isNotEmpty()
+        }
+
+        return@combineLatest false
+    }
+
+    private val _passwordValidationEvent: LiveEvent<ValidatePassword.Result> =
+        LiveEvent()
+    val passwordValidationEvent: LiveData<ValidatePassword.Result>
+        get() = _passwordValidationEvent
+
+    private val _emailValidationEvent: LiveEvent<ValidateEmail.Result> =
+        LiveEvent()
+    val emailValidationEvent: LiveData<ValidateEmail.Result>
+        get() = _emailValidationEvent
+
+    private fun validatePassword(): Boolean {
+        val result = validatePassword(password.value)
+        _passwordValidationEvent.emit(result)
+        return when (result) {
+            ValidatePassword.Result.Valid -> true
+            ValidatePassword.Result.NotValid, ValidatePassword.Result.IsEmpty -> false
+        }
+    }
+
+    private fun validateEmail(): Boolean {
+        val result = validateEmail(email.value)
+        _emailValidationEvent.emit(result)
+        return when (result) {
+            ValidateEmail.Result.Valid -> true
+            ValidateEmail.Result.IsEmpty, ValidateEmail.Result.NotValid -> false
+        }
+    }
+
+    private fun validateSignInInputs(): Boolean {
+        return validatePassword() && validateEmail()
+    }
+
+    fun forgotPassword() {
+        _openResetPasswordEvent.emit()
+    }
+
+    fun logIn() {
+        validateSignInInputs().applyIfTrue {
+            viewModelScope.launch {
+                handleLoading {
+                    signIn(email.value!!, password.value!!)
+                    _initSignInEvent.emit()
+                }
+            }
+        }
+    }
+}
+\end{lstlisting}
+\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_7}, caption={GestureDetectorCompat}]
+class AuthSignInViewModel(
+    private val validateEmail: ValidateEmail,
+    private val validatePassword: ValidatePassword,
+    private val signIn: SignIn
+) : BaseViewModel() {
+    val password: MutableLiveData<String> = MutableLiveData()
+    val email: MutableLiveData<String> = MutableLiveData()
+
+    private val _initSignInEvent: LiveEvent<Nothing> = LiveEvent()
+    val initSignInEvent: LiveData<Nothing>
+        get() = _initSignInEvent
+
+    private val _openResetPasswordEvent: LiveEvent<Nothing> = LiveEvent()
+    val openResetPasswordEvent: LiveData<Nothing>
+        get() = _openResetPasswordEvent
+
+    val isSignUpDataValid: LiveData<Boolean> = combineLatest(email, password) {
+        val email = email.value
+        val password = password.value
+
+        if (email != null && password != null) {
+            return@combineLatest email.isNotEmpty() && password.isNotEmpty()
+        }
+
+        return@combineLatest false
+    }
+
+    private val _passwordValidationEvent: LiveEvent<ValidatePassword.Result> =
+        LiveEvent()
+    val passwordValidationEvent: LiveData<ValidatePassword.Result>
+        get() = _passwordValidationEvent
+
+    private val _emailValidationEvent: LiveEvent<ValidateEmail.Result> =
+        LiveEvent()
+    val emailValidationEvent: LiveData<ValidateEmail.Result>
+        get() = _emailValidationEvent
+
+    private fun validatePassword(): Boolean {
+        val result = validatePassword(password.value)
+        _passwordValidationEvent.emit(result)
+        return when (result) {
+            ValidatePassword.Result.Valid -> true
+            ValidatePassword.Result.NotValid, ValidatePassword.Result.IsEmpty -> false
+        }
+    }
+
+    private fun validateEmail(): Boolean {
+        val result = validateEmail(email.value)
+        _emailValidationEvent.emit(result)
+        return when (result) {
+            ValidateEmail.Result.Valid -> true
+            ValidateEmail.Result.IsEmpty, ValidateEmail.Result.NotValid -> false
+        }
+    }
+
+    private fun validateSignInInputs(): Boolean {
+        return validatePassword() && validateEmail()
+    }
+
+    fun forgotPassword() {
+        _openResetPasswordEvent.emit()
+    }
+
+    fun logIn() {
+        validateSignInInputs().applyIfTrue {
+            viewModelScope.launch {
+                handleLoading {
+                    signIn(email.value!!, password.value!!)
+                    _initSignInEvent.emit()
+                }
+            }
+        }
+    }
+}
+\end{lstlisting}
+\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_8}, caption={UriBindingAdapter}]
+object UriBindingAdapter {
+    @JvmStatic
+    @BindingAdapter(value = ["image_uri"])
+    fun setUri(imageView: ImageView, url: Uri?) {
+        Glide.with(imageView)
+            .load(url)
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["image_uri", "image_placeholder"])
+    fun setUriWithPlaceholder(imageView: ImageView, url: Uri?, placeholder: Drawable) {
+        Glide.with(imageView)
+            .load(url)
+            .placeholder(placeholder)
+            .fallback(placeholder)
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["image_uri", "image_placeholder", "image_radius"])
+    fun setUriWithPlaceholderRadius(
+        imageView: ImageView,
+        url: Uri?,
+        placeholder: Drawable,
+        imageRadius: Int
+    ) {
+        Glide.with(imageView)
+            .load(url)
+            .transform(CenterCrop(), RoundedCorners(imageRadius.dp))
+            .placeholder(placeholder)
+            .fallback(placeholder)
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["image_res", "image_placeholder", "image_radius"])
+    fun setResWithPlaceholderRadius(
+        imageView: ImageView,
+        @DrawableRes res: Int?,
+        placeholder: Drawable,
+        imageRadius: Int
+    ) {
+        Glide.with(imageView)
+            .load(res)
+            .transform(CenterCrop(), RoundedCorners(imageRadius.dp))
+            .placeholder(placeholder)
+            .fallback(placeholder)
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["circle_image_uri"])
+    fun setCircleUri(imageView: ImageView, url: Uri?) {
+        url?.let {
+            Glide.with(imageView)
+                .load(url)
+                .circleCrop()
+                .into(imageView)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["circle_image_uri", "placeholder"])
+    fun setCircleUriWithPlaceholder(imageView: ImageView, url: Uri?, placeholder: Drawable) {
+        url?.let {
+            Glide.with(imageView)
+                .load(url)
+                .circleCrop()
+                .placeholder(placeholder)
+                .fallback(placeholder)
+                .into(imageView)
+        }
+    }
+}
+\end{lstlisting}
+\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_9}, caption={AhriMessagingService}, caption={PreferenceDataSource}]
+object UriBindingAdapter {
+    @JvmStatic
+    @BindingAdapter(value = ["image_uri"])
+    fun setUri(imageView: ImageView, url: Uri?) {
+        Glide.with(imageView)
+            .load(url)
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["image_uri", "image_placeholder"])
+    fun setUriWithPlaceholder(imageView: ImageView, url: Uri?, placeholder: Drawable) {
+        Glide.with(imageView)
+            .load(url)
+            .placeholder(placeholder)
+            .fallback(placeholder)
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["image_uri", "image_placeholder", "image_radius"])
+    fun setUriWithPlaceholderRadius(
+        imageView: ImageView,
+        url: Uri?,
+        placeholder: Drawable,
+        imageRadius: Int
+    ) {
+        Glide.with(imageView)
+            .load(url)
+            .transform(CenterCrop(), RoundedCorners(imageRadius.dp))
+            .placeholder(placeholder)
+            .fallback(placeholder)
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["image_res", "image_placeholder", "image_radius"])
+    fun setResWithPlaceholderRadius(
+        imageView: ImageView,
+        @DrawableRes res: Int?,
+        placeholder: Drawable,
+        imageRadius: Int
+    ) {
+        Glide.with(imageView)
+            .load(res)
+            .transform(CenterCrop(), RoundedCorners(imageRadius.dp))
+            .placeholder(placeholder)
+            .fallback(placeholder)
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["circle_image_uri"])
+    fun setCircleUri(imageView: ImageView, url: Uri?) {
+        url?.let {
+            Glide.with(imageView)
+                .load(url)
+                .circleCrop()
+                .into(imageView)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["circle_image_uri", "placeholder"])
+    fun setCircleUriWithPlaceholder(imageView: ImageView, url: Uri?, placeholder: Drawable) {
+        url?.let {
+            Glide.with(imageView)
+                .load(url)
+                .circleCrop()
+                .placeholder(placeholder)
+                .fallback(placeholder)
+                .into(imageView)
+        }
+    }
+}
+\end{lstlisting}
+\end{asection}
+\newpage
+\phantomsection
+\addcontentsline{toc}{section}{Приложение Б (обязательное) Работа с Firebase}
+
+\begin{center}
+    \textbf{\MakeUppercase{Приложение Б}\\
+    (обязательное)\\
+    Работа с Firebase }
 \end{center}
 
 \begin{lstlisting}[language=Java,label={lst:add:firebase}]

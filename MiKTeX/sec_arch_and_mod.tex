@@ -3,8 +3,8 @@
  
 \subsection{Android}
 Так как для разработки был выбран Android SDK, то при разработке было решено придерживаться характерных для данной платформы архитектурных подходов.
-На данный момент стандартом в Android разработке является MVVM\cite{web7}.
-Она заключается в отделении пользовательского интерфейса от логики приложения. Опишем каждый компонент данного архитектурного подхода. (cхема на рисунке~\ref{fig:arch:docs_connections}).
+На данный момент стандартом в Android разработке является MVVM \cite{web7}.
+Она заключается в отделении пользовательского интерфейса от логики приложения. Опишем каждый компонент данного архитектурного подхода (cхема на рисунке~\ref{fig:arch:docs_connections}).
 
 Model — слой с основной логикой программы.
 View — пользовательский интерфейс.
@@ -17,17 +17,17 @@ ViewModel — связывающая прослойка между View и Model
    \label{fig:arch:docs_connections}
 \end{figure}
 
-Для упрощения реализации данной парадигмы проектирования и упрощения разработки, компания Google выпустила Android Architecture Components\cite{web8}. Данный набор решений включает в себя:
+Для упрощения реализации части проектирования и упрощения разработки, компания Google выпустила Android Architecture Components \cite{web8}. Данный набор решений включает в себя:
 
 \begin{itemize}
- \item Lifecycle - отслеживает текущий статус Activity и может уведомлять об этом своих подписчиков;
- \item LiveData - получает и хранит данные, может отправлять их своим подписчикам;
- \item ViewModel - поможет сохранить живыми необходимые для вас объекты при повороте экрана;
- \item Paging Library - библиотека для постраничной загрузки данных из базы данных, с сервера или любого другого источника;
- \item Navigation Architecture Component - новый компонент для навигации по экранам приложения;
- \item Work Manager - удобный механизм выполнения фоновых задач;
- \item Room - обёртка для работы с базой данных;
- \item Data Binding - избавление от рутины по написанию кода работающего со View.
+ \item Lifecycle — отслеживает текущий статус Activity и может уведомлять об этом своих подписчиков;
+ \item LiveData — получает и хранит данные, может отправлять их своим подписчикам;
+ \item ViewModel — поможет сохранить живыми необходимые для вас объекты при повороте экрана;
+ \item Paging Library — библиотека для постраничной загрузки данных из базы данных, с сервера или любого другого источника;
+ \item Navigation Architecture Component — новый компонент для навигации по экранам приложения;
+ \item Work Manager — удобный механизм выполнения фоновых задач;
+ \item Room — обёртка для работы с базой данных;
+ \item Data Binding — избавление от рутины по написанию кода работающего со View.
  \end{itemize}
 
  Основные плюсы MVVM включают в себя:
@@ -47,9 +47,9 @@ Serverless-вычисления (бессерверные-вычисления) 
 \subsection{Организация и описание модулей приложения}
 Разработанное мобильное приложение можно разделить на три составляющие:
 \begin{itemize}
- \item Клиентское приложения на Kotlin;
- \item Модуль Firebase для работы с базой данных;
- \item API cервер для получения данных;
+ \item клиентское приложения на Kotlin;
+ \item модуль Firebase для работы с базой данных;
+ \item API cервер для получения данных.
 \end{itemize}
  
 Клиентское приложение является основным модулем для данного проекта. В рамках клиентского приложения реализованы основные функциональные возможности данного проекта:
@@ -65,7 +65,7 @@ Serverless-вычисления (бессерверные-вычисления) 
  
 Модуль Firebase отвечает за авторизацию, управление данными пользователя, их организацию и процесс передачи данных клиентскому приложению.
  
-API сервер представлет собой несколько сторонних бесплатных API серверов с базами данных игр и игровых магазинов. Основная функция этих серверов заключается в выдаче клиенту необходимой для работы информации (список магазинов, дополнительная информация об игре, поиск лучший предложений), а так же объединении нескольких сторонних API в единое целое на клиентской части.
+API сервер представлет собой несколько сторонних бесплатных API серверов с базами данных игр и игровых магазинов. Основная функция этих серверов заключается в выдаче клиенту необходимой для работы информации (список магазинов, дополнительная информация об игре, поиск лучший предложений), а также объединении нескольких сторонних API в единое целое на клиентской части.
  
 На рисунке~\ref{fig:arch:modules_scheme} изображена схема взаимодействия вышеперечисленных модулей.
  
@@ -84,238 +84,13 @@ API сервер представлет собой несколько сторо
 
 Для удобной и расширяемой архитектуры приложения были написаны базовые компоненты для Activity, Fragment, ViewModel. Рассмотрим каждый в отдельности.
 
-\subsubsection{BaseActivity}~\par
-Activity представляет собой отдельный модуль приложения с которым пользователь может взаимодействовать. Для удобства был написан базовый класс (см. листинг~\ref{lst:baseActivity}), который реализует обработку ошибок путем вызова диалогового окна с текстом ошибки, а так же показом прогресса загрузки данных с сервера дополнительно с блокированием интерфейса пользователя, пока запрос на сервер не будет выполнен. Помимо блокирования пользовательского интерфейса данная реализация решает проблему синхронизации при нескольких запросах на сервер путем @Synchronized аннотаций и проверок на существования прогресса на экране. Аннотация @Synchronized позволяет быть уверенным в том, что в данный метод заходит только 1 поток, при том, что для остальных потоков данный метод не будет доступен, пока первый поток не завершит свои задачи. Данный класс является базовым для любой Activity в приложении.
+\undersection{BaseActivity}~\par
+Activity представляет собой отдельный модуль приложения с которым пользователь может взаимодействовать. Для удобства был написан базовый класс (см. листинг~\ref{lst:add:a_1}), который реализует обработку ошибок путем вызова диалогового окна с текстом ошибки, а также показом прогресса загрузки данных с сервера дополнительно с блокированием интерфейса пользователя, пока запрос на сервер не будет выполнен. Помимо блокирования пользовательского интерфейса данная реализация решает проблему синхронизации при нескольких запросах на сервер путем @Synchronized аннотаций и проверок на существования прогресса на экране. Аннотация @Synchronized позволяет быть уверенным в том, что в данный метод заходит только 1 поток, при том, что для остальных потоков данный метод не будет доступен, пока первый поток не завершит свои задачи. Данный класс является базовым для любой Activity в приложении.
+\undersection{BaseFragment}~\par
+Fragment является модульной переиспользуемой частью Activity. Класс BaseFragment (см. листинг~\ref{lst:add_a_2}) является базовым классом для всех фрагментов в приложении. Данный класс реализует передачу событий загрузки в Activity, а также логику по работе с клавиатурой и проверке доступов к различным подсистемам Android. Также данный класс обязывает реализовывать для каждого фрагмента базовую ViewModel.
 
-\begin{lstlisting}[language=Java,label={lst:baseActivity},caption={Компонент BaseActivity}]
-
-abstract class BaseActivity<T : BaseViewModel> : BaseActivity() {
-    protected abstract val viewModel: T
-
-    private lateinit var progressDialog: ProgressDialog
-
-    private lateinit var errorDialog: MaterialDialog
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setUpDialogs()
-        observeUiChanges()
-    }
-
-    private fun setUpDialogs() {
-        progressDialog = ProgressDialog()
-        errorDialog = MaterialDialog(this).apply {
-            positiveButton(text = "Ok")
-        }
-    }
-
-    private fun observeUiChanges() {
-        viewModel.apply {
-            progress.observe(
-                this@BaseActivity,
-                { progress ->
-                    handleProgress(progress = progress)
-                }
-            )
-
-            errorEvent.observe(
-                this@BaseActivity,
-                { error ->
-                    handleAhriError(ahriError = error)
-                }
-            )
-        }
-    }
-
-    @Synchronized
-    fun handleProgress(
-        fragmentManager: FragmentManager = supportFragmentManager,
-        progress: Boolean
-    ) {
-        if (progress) {
-            if (!progressDialog.isAdded) {
-                progressDialog.show(fragmentManager, ProgressDialog::class.java.canonicalName)
-                fragmentManager.executePendingTransactions()
-            }
-        } else {
-            if (progressDialog.isAdded) {
-                progressDialog.dismissAllowingStateLoss()
-                fragmentManager.executePendingTransactions()
-            }
-        }
-    }
-
-    @Synchronized
-    fun handleAhriError(
-        fragmentManager: FragmentManager = supportFragmentManager,
-        ahriError: AhriError
-    ) {
-        handleError(fragmentManager, ahriError, ahriError.retryAction)
-    }
-
-    private fun handleError(
-        fragmentManager: FragmentManager = supportFragmentManager,
-        error: AhriError,
-        retryAction: (() -> Unit)?
-    ) {
-        errorDialog.show {
-            message(text = error.exception.message)
-        }
-    }
-}
-\end{lstlisting}
-
-\subsubsection{BaseFragment}~\par
-Fragment является модульной переиспользуемой частью Activity. Класс BaseFragment (см. листинг~\ref{lst:baseFragment}) является базовым классом для всех фрагментов в приложении. Данный класс реализует передачу событий загрузки в Activity, а так же логику по работе с клавиатурой и проверке доступов к различным подсистемам Android. Так же данный класс обязывает реализовывать для каждого фрагмента базовую ViewModel.
-
-\begin{lstlisting}[language=Java,label={lst:baseFragment},caption={Компонент BaseFragment}]
-abstract class BaseFragment<T : BaseViewModel> : BaseFragment() {
-    protected abstract val viewModel: T
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        observeUiEvents()
-    }
-
-    override fun onDestroyView() {
-        hideKeyboard()
-        requireActivity().currentFocus?.hideKeyboard()
-        super.onDestroyView()
-    }
-
-    private fun observeUiEvents() {
-        viewModel.apply {
-            progress.observe(
-                viewLifecycleOwner,
-                { progress ->
-                    (activity as BaseActivity<*>).handleProgress(
-                        fragmentManager = childFragmentManager,
-                        progress = progress
-                    )
-                }
-            )
-
-            errorEvent.observe(
-                viewLifecycleOwner,
-                { error ->
-                    (activity as BaseActivity<*>).handleAhriError(
-                        fragmentManager = childFragmentManager,
-                        ahriError = error
-                    )
-                }
-            )
-        }
-    }
-
-    fun checkPermission(permission: String, requestPermissionCode: Int): Boolean {
-        return if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(permission)) {
-                requestPermissions(arrayOf(permission), requestPermissionCode)
-            } else {
-                requestPermissions(arrayOf(permission), requestPermissionCode)
-            }
-
-            false
-        } else {
-            true
-        }
-    }
-
-    protected fun openGoToSettingPermissionDialog(activityResultLauncher: ActivityResultLauncher<Intent>) {
-        MaterialDialog(requireContext()).apply {
-            title(res = R.string.base_dialog_title_runtime_permission_is_denied)
-            message(text = getString(R.string.base_dialog_text_go_to_application_settings))
-            cancelable(false)
-            positiveButton(
-                res = R.string.action_go_to_settings,
-                click = {
-                    val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package", requireContext().packageName, null)
-                    intent.data = uri
-                    activityResultLauncher.launch(intent)
-                }
-            )
-            negativeButton(res = R.string.action_cancel, click = { /* Nothing */ })
-        }.show()
-    }
-}
-\end{lstlisting}
-
-\subsubsection{BaseViewModel}~\par
-ViewModel — модель представления, которая служит прослойкой между View и Model. Такое разделение позволяет ускорить разработку и поддерживаемость программы — можно менять один компонент, не затрагивая код другого. Данная реализация базовой ViewModel (см. листинг~\ref{lst:baseViewModel}) включает в себя определение событий ошибок, загрузок, а так же вспомогательных методов для запросов в сеть.
-
-\begin{lstlisting}[language=Java,label={lst:baseViewModel},caption={Компонент BaseViewModel}]
-open class BaseViewModel : ViewModel(), CoroutineScope {
-
-    val progress: MutableLiveData<Boolean> = MutableLiveData()
-
-    override val coroutineContext = SupervisorJob() + Dispatchers.Main
-
-    val errorEvent: LiveEvent<AhriError> = LiveEvent()
-
-    suspend fun handleLoading(
-        scope: CoroutineScope = viewModelScope,
-        progress: MutableLiveData<Boolean> = this@BaseViewModel.progress,
-        actionUseCase: Any? = null,
-        block: suspend () -> Unit,
-    ) {
-        handleLoading(
-            progress = progress,
-            block = block,
-            retryAction = {
-                scope.launch {
-                    handleLoading(scope, progress, actionUseCase, block)
-                }
-            }
-        )
-    }
-
-    private suspend fun handleLoading(
-        progress: MutableLiveData<Boolean> = this@BaseViewModel.progress,
-        block: suspend () -> Unit,
-        retryAction: () -> Unit
-    ) {
-        handleErrors(
-            block = {
-                try {
-                    progress.value = true
-                    block()
-                } finally {
-                    progress.value = false
-                }
-            },
-            retryAction = retryAction
-        )
-    }
-
-    suspend fun handleErrors(
-        scope: CoroutineScope = viewModelScope,
-        block: suspend () -> Unit,
-    ) {
-        handleErrors(
-            block = block,
-            retryAction = {
-                scope.launch {
-                    handleErrors(scope, block)
-                }
-            }
-        )
-    }
-
-    private suspend fun handleErrors(
-        block: suspend () -> Unit,
-        retryAction: () -> Unit
-    ) {
-        try {
-            block()
-        } catch (ex: Throwable) {
-            errorEvent.value = AhriError(ex, retryAction)
-
-            Timber.tag("debug").e(ex.message ?: "")
-        }
-    }
-}
-\end{lstlisting}
+\undersection{BaseViewModel}~\par
+ViewModel — модель представления, которая служит прослойкой между View и Model. Такое разделение позволяет ускорить разработку и поддерживаемость программы — можно менять один компонент, не затрагивая код другого. Данная реализация базовой ViewModel (см. листинг~\ref{lst:add_a_3}) включает в себя определение событий ошибок, загрузок, а также вспомогательных методов для запросов в сеть.
 
 \subsection{Слой данных и логики}
 Всю бизнес-логику и логику работы с получением данных можно представить в виде дерева зависимостей, состоящего из:
@@ -347,7 +122,7 @@ class GetStores(private val storesGateway: StoresGateway) {
 }
 \end{lstlisting}
 
-Данный UseCase вызывает StoresGateway (см. листинг~\ref{lst:storesGateway}), который осуществляет получение магазинов либо из базы данных, либо с сервера, попутно сохраняя их в базу данных. Данный метод проверяет наличие интернет подключение на устройстве, после этого делает запрос на сервер, либо в локальную базу данных, в зависимости от результата. Так же выполняются преобразования моделей в модели подходящие приложению. Если интернет подключение на устройстве присутствует и получение списка магазинов с сервера произошло успешно, то метод сохраняет полученные магазины в локальную базу данных для дальнейшего использования.
+Данный UseCase вызывает StoresGateway (см. листинг~\ref{lst:storesGateway}), который осуществляет получение магазинов либо из базы данных, либо с сервера, попутно сохраняя их в базу данных. Данный метод проверяет наличие интернет подключение на устройстве, после этого делает запрос на сервер, либо в локальную базу данных, в зависимости от результата. Также выполняются преобразования моделей в модели подходящие приложению. Если интернет подключение на устройстве присутствует и получение списка магазинов с сервера произошло успешно, то метод сохраняет полученные магазины в локальную базу данных для дальнейшего использования.
 \begin{lstlisting}[language=Java,label={lst:storesGateway},caption={StoresGateway}]
 class StoresGatewayImpl(
     private val storesDataSource: StoresDataSource,
@@ -448,123 +223,12 @@ abstract class StoreLocalDao : BaseDao<StoreLocal> {
 \end{itemize}
 
 
-В качестве примера приведён модуль Gateway (см. листинг~\ref{lst:gatewayModule}), определяющий все классы Gateway в приложении.
-\begin{lstlisting}[language=Java,label={lst:gatewayModule},caption={GatewayModule}]
-var gatewayModule = module {
-    single<PreferencesGateway> {
-        PreferencesGatewayImpl(preferenceDataSource = get())
-    }
-    single<StoresGateway> {
-        StoresGatewayImpl(
-            storesDataSource = get(),
-            networkService = get(),
-            storesDao = get()
-        )
-    }
-    single<DealsGateway> {
-        DealsGatewayImpl(
-            dealsDataSource = get(),
-            storesGateway = get(),
-            favoriteDao = get(),
-            dealDao = get()
-        )
-    }
-    single<GamesGateway> {
-        GamesGatewayImpl(
-            gamesDataSource = get(),
-            networkService = get(),
-            storesGateway = get(),
-            favoriteGameDao = get(),
-            gameDao = get()
-        )
-    }
-    single<AuthGateway> {
-        AuthGatewayImpl()
-    }
-    single<StoriesGateway> {
-        StoriesGatewayImpl()
-    }
-    single<BannersGateway> {
-        BannersGatewayImpl()
-    }
-    single<RssGateway> {
-        RssGatewayImpl(rssApi = get())
-    }
-}
-\end{lstlisting}
+В качестве примера приведён модуль Gateway (см. листинг~\ref{lst:add:a_4}), определяющий все классы Gateway в приложении.
 
 \subsection{Манифест приложения}
-Файл манифеста AndroidManifest.xml (см. листинг~\ref{lst:manifest}) предоставляет основную информацию о программе системе. Каждое приложение должно иметь свой файл AndroidManifest.xml. Файл манифеста инкапсулирует всю архитектуру Android-приложения, его функциональные возможности и конфигурацию. Корневым элементом манифеста является <manifest>. Помимо данного элемента обязательными элементами является теги <application> и <uses-sdk>. Элемент <application> является основным элементом манифеста и содержит множество дочерних элементов, определяющих структуру и работу приложения. Порядок расположения элементов, находящихся на одном уровне, произвольный. Все значения устанавливаются через атрибуты элементов. Кроме обязательных элементов, упомянутых выше, в манифесте по мере необходимости используются другие элементы.
+Файл манифеста AndroidManifest.xml (см. листинг~\ref{lst:add:a_5}) предоставляет основную информацию о программе системе. Каждое приложение должно иметь свой файл AndroidManifest.xml. Файл манифеста инкапсулирует всю архитектуру Android-приложения, его функциональные возможности и конфигурацию. Корневым элементом манифеста является <manifest>. Помимо данного элемента обязательными элементами является теги <application> и <uses-sdk>. Элемент <application> является основным элементом манифеста и содержит множество дочерних элементов, определяющих структуру и работу приложения. Порядок расположения элементов, находящихся на одном уровне, произвольный. Все значения устанавливаются через атрибуты элементов. Кроме обязательных элементов, упомянутых выше, в манифесте по мере необходимости используются другие элементы.
 
-\begin{lstlisting}[language=Xml,label={lst:manifest},caption={AndroidManifest.xml}]
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.lust.ahri">
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <application
-            android:name=".App"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-
-        <activity
-                android:name="com.lust.ahri.view.main.MainActivity"
-                android:label="@string/app_name"
-                android:screenOrientation="portrait" />
-
-        <activity
-                android:name=".view.auth.AuthActivity"
-                android:screenOrientation="portrait" />
-
-        <activity
-                android:name=".view.onboarding.OnboardingActivity"
-                android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <service
-                android:name=".core.service.firebase.AhriMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-
-        <provider
-                android:name="br.com.mauker.materialsearchview.db.HistoryProvider"
-                android:authorities="br.com.mauker.materialsearchview.searchhistorydatabase"
-                android:exported="false"
-                android:protectionLevel="signature"
-                android:syncable="true"/>
-
-        <provider
-                android:name="androidx.core.content.FileProvider"
-                android:authorities="${applicationId}.fileprovider"
-                android:exported="false"
-                android:grantUriPermissions="true">
-            <meta-data
-                    android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/file_paths" />
-        </provider>
-
-    </application>
-
-</manifest>
-\end{lstlisting}
-
-\subsubsection{AhriMessagingService}~\par
+\undersection{AhriMessagingService}~\par
 
 Сервис который используется для получения и отображения нотификаций полученных через Firebase Cloud Messaging. Конкретной реализации данный сервис не имеет (см. листинг~\ref{lst:firebase_notifications}) и инкапсулирует базовую логику отображения нотификаций пользователю когда приложение выключено.
 
@@ -581,12 +245,12 @@ class AhriMessagingService: FirebaseMessagingService() {
 }
 \end{lstlisting}
 
-\subsubsection{HistoryProvider}~\par
-Поставщик содержимого - это оболочка, в которую заключены данные. Если приложение использует базу данных SQLite, то только приложение имеет к ней доступ. Но бывают ситуации, когда данные желательно сделать общими. Простой пример - контакты из телефонной книги тоже содержатся в базе данных, но приложению нужно иметь доступ к данным, чтобы приложение тоже могло выводить список контактов. Так как исходное приложение не имеет доступа к базе данных чужого приложения, был придуман специальный механизм, позволяющий делиться своими данными всем желающим.
+\undersection{HistoryProvider}~\par
+Поставщик содержимого — это оболочка, в которую заключены данные. Если приложение использует базу данных SQLite, то только приложение имеет к ней доступ. Но бывают ситуации, когда данные желательно сделать общими. Простой пример — контакты из телефонной книги тоже содержатся в базе данных, но приложению нужно иметь доступ к данным, чтобы приложение тоже могло выводить список контактов. Так как исходное приложение не имеет доступа к базе данных чужого приложения, был придуман специальный механизм, позволяющий делиться своими данными всем желающим.
 
 Данный поставщик содержимого не имеет конкретной реализации и используется для сохранения поисковых запросов пользователя. Данный поставщик включает в себя функционал удаления, добавления и обновления поисковых запросов.
 
-\subsubsection{FileProvider}~\par
+\undersection{FileProvider}~\par
 FileProvider является поставщиком содержимого который используется для доступа ко внутренним файлам приложения во время того как пользователь меняет свой аватар. Пример использования приведён ниже (см. листинг~\ref{lst:file_provider}).
 
 \begin{lstlisting}[language=Java,label={lst:file_provider},caption={Использование FileProvider}]
@@ -615,7 +279,7 @@ FileProvider является поставщиком содержимого ко
   \item модуль аккаунта.
 \end{itemize}
 
-\subsubsection{Модуль приветствия}~\par
+\undersection{Модуль приветствия}~\par
 Данный модуль создан для описания пользователю основных функций приложения. Модуль состоит из одной OnboardingActivity, которая в себя включает постраничное отображение преимуществ приложения. Пользователь может пропустить часть приветствия нажав кнопку SKIP и подтвердив свой выбор в диалоге. Пример пользовательского интерфейса представлен на рисунке~\ref{fig:arch:onboarding_1}.
 
 \begin{figure}[H]
@@ -663,7 +327,7 @@ class OnboardingFragmentStateAdapter(activity: FragmentActivity) : FragmentState
 \end{lstlisting}
 
 
-\subsubsection{Модуль авторизации}~\par
+\undersection{Модуль авторизации}~\par
 
 Модуль авторизации состоит из одной AuthActivity, а также нескольких фрагментов между которыми происходит навигация внутри этой Activity.
 
@@ -676,7 +340,7 @@ AuthStartFragment является стартовым фрагментом в Au
    \label{fig:arch:auth_1}
 \end{figure}
 
-AuthSignInFragment выполняет функцию аутентификации пользователя с помощью емейла и пароля, так же имея возможность перейти на экран восстановления пароля AuthResetPasswordStep1Fragment или на экран регистрации пользователя AuthSignUpFragment. Пример пользовательского интерфейса представлен на рисунке~\ref{fig:arch:auth_2}.
+AuthSignInFragment выполняет функцию аутентификации пользователя с помощью email и пароля, также имея возможность перейти на экран восстановления пароля AuthResetPasswordStep1Fragment или на экран регистрации пользователя AuthSignUpFragment. Пример пользовательского интерфейса представлен на рисунке~\ref{fig:arch:auth_2}.
 
 \begin{figure}[H]
  \centering
@@ -685,84 +349,7 @@ AuthSignInFragment выполняет функцию аутентификаци�
    \label{fig:arch:auth_2}
 \end{figure}
 
-Программная реализация содержит AuthSignInViewModel, который проводит базовую валидацию полей емейла и пароля с помощью ValidateEmail и ValidatePassword (см. листинг~\ref{lst:auth_sign_in_vm}).
-
-\begin{lstlisting}[language=Java,label={lst:auth_sign_in_vm},caption={AuthSignInViewModel}]
-class AuthSignInViewModel(
-    private val validateEmail: ValidateEmail,
-    private val validatePassword: ValidatePassword,
-    private val signIn: SignIn
-) : BaseViewModel() {
-    val password: MutableLiveData<String> = MutableLiveData()
-    val email: MutableLiveData<String> = MutableLiveData()
-
-    private val _initSignInEvent: LiveEvent<Nothing> = LiveEvent()
-    val initSignInEvent: LiveData<Nothing>
-        get() = _initSignInEvent
-
-    private val _openResetPasswordEvent: LiveEvent<Nothing> = LiveEvent()
-    val openResetPasswordEvent: LiveData<Nothing>
-        get() = _openResetPasswordEvent
-
-    val isSignUpDataValid: LiveData<Boolean> = combineLatest(email, password) {
-        val email = email.value
-        val password = password.value
-
-        if (email != null && password != null) {
-            return@combineLatest email.isNotEmpty() && password.isNotEmpty()
-        }
-
-        return@combineLatest false
-    }
-
-    private val _passwordValidationEvent: LiveEvent<ValidatePassword.Result> =
-        LiveEvent()
-    val passwordValidationEvent: LiveData<ValidatePassword.Result>
-        get() = _passwordValidationEvent
-
-    private val _emailValidationEvent: LiveEvent<ValidateEmail.Result> =
-        LiveEvent()
-    val emailValidationEvent: LiveData<ValidateEmail.Result>
-        get() = _emailValidationEvent
-
-    private fun validatePassword(): Boolean {
-        val result = validatePassword(password.value)
-        _passwordValidationEvent.emit(result)
-        return when (result) {
-            ValidatePassword.Result.Valid -> true
-            ValidatePassword.Result.NotValid, ValidatePassword.Result.IsEmpty -> false
-        }
-    }
-
-    private fun validateEmail(): Boolean {
-        val result = validateEmail(email.value)
-        _emailValidationEvent.emit(result)
-        return when (result) {
-            ValidateEmail.Result.Valid -> true
-            ValidateEmail.Result.IsEmpty, ValidateEmail.Result.NotValid -> false
-        }
-    }
-
-    private fun validateSignInInputs(): Boolean {
-        return validatePassword() && validateEmail()
-    }
-
-    fun forgotPassword() {
-        _openResetPasswordEvent.emit()
-    }
-
-    fun logIn() {
-        validateSignInInputs().applyIfTrue {
-            viewModelScope.launch {
-                handleLoading {
-                    signIn(email.value!!, password.value!!)
-                    _initSignInEvent.emit()
-                }
-            }
-        }
-    }
-}
-\end{lstlisting}
+Программная реализация содержит AuthSignInViewModel, который проводит базовую валидацию полей email и пароля с помощью ValidateEmail и ValidatePassword (см. листинг~\ref{lst:add:a_6}).
 
 При нажатии на кнопку Sign In клиентское приложение делает запрос на Firebase Auth с помощью logIn метода (см. листинг~\ref{lst:auth_sign_in_uc}), который проверяет правильность введенных данных и делает запрос на сервер с этими данными. При неправильно введенных данных пользователь получает оповещение в виде сообщения на экране, что нужно ввести правильные данные.
 
@@ -781,7 +368,7 @@ class AuthSignInViewModel(
     }
 \end{lstlisting}
 
-AuthSignUpFragment производит регистрацию пользователя с помощью емейла, пароля и имени пользователя, так же имея возможность перейти на AuthSignInFragment. Пример пользовательского интерфейса представлен на рисунке~\ref{fig:arch:auth_3}.
+AuthSignUpFragment производит регистрацию пользователя с помощью email, пароля и имени пользователя, также имея возможность перейти на AuthSignInFragment. Пример пользовательского интерфейса представлен на рисунке~\ref{fig:arch:auth_3}.
 
 \begin{figure}[H]
  \centering
@@ -809,9 +396,9 @@ AuthSignUpFragment производит регистрацию пользова�
     }
 \end{lstlisting}
 
-Стоит заметить, что данный метод инкапсулирует в себе еще один запрос на изменения профиля пользователя, так как изначально регистрация проходит только с полями емейла и пароля, поэтому требуется дополнительный запрос на смену профиля при завершении регистрации.
+Стоит заметить, что данный метод инкапсулирует в себе еще один запрос на изменения профиля пользователя, так как изначально регистрация проходит только с полями email и пароля, поэтому требуется дополнительный запрос на смену профиля при завершении регистрации.
 
-\subsubsection{Модуль исследования}~\par
+\undersection{Модуль исследования}~\par
 Модуль исследования позволяет пользователю просмотреть самые интересные новинки и новости из мира игр за последнее время. Модуль состоит из ExploreFragment, который является основным фрагментом в данном модуле и StoryFragment, показывающий истории наподобии Instagram. Примеры пользовательского интерфейса представлены на рисунках~\ref{fig:arch:explore_1} и ~\ref{fig:arch:explore_2}.
 
 \begin{figure}[H]
@@ -867,62 +454,7 @@ class DealsPagingSource(
 }
 \end{lstlisting}
 
-Истории реализованы наподобии Instagram, при нажатии на отдельную историю открывается отдельный фрагмент StoryFragment. Программная реализация включает в себя обработку жестов нажатий для переключения историй вперед и назад, данная логика реализуется с помощью класса GestureDetectorCompat (см. листинг~\ref{lst:explore_touch}). По нажатию на экран данный класс получает координаты нажатия, после этого происходит сравнение с шириной экрана, после данного действия алгоритм решает пролистать назад истории или вперед.
-
-\begin{lstlisting}[language=Java,label={lst:explore_touch},caption={GestureDetectorCompat}]
-        val gesture =
-            GestureDetectorCompat(
-                requireContext(),
-                object : GestureDetector.OnGestureListener {
-                    override fun onDown(e: MotionEvent?): Boolean {
-                        return true
-                    }
-
-                    override fun onShowPress(e: MotionEvent?) {
-                    }
-
-                    override fun onSingleTapUp(e: MotionEvent?): Boolean {
-                        e?.let {
-                            val x = e.x
-
-                            if (x < (binding.vImage.width * 0.5)) {
-                                binding.vProgress.previous()
-                            } else {
-                                binding.vProgress.next()
-                            }
-                        }
-                        return true
-                    }
-
-                    override fun onScroll(
-                        e1: MotionEvent?,
-                        e2: MotionEvent?,
-                        distanceX: Float,
-                        distanceY: Float
-                    ): Boolean {
-                        return true
-                    }
-
-                    override fun onLongPress(e: MotionEvent?) {
-                    }
-
-                    override fun onFling(
-                        e1: MotionEvent?,
-                        e2: MotionEvent?,
-                        velocityX: Float,
-                        velocityY: Float
-                    ): Boolean {
-                        return true
-                    }
-                }
-            )
-
-        binding.vImage.setOnTouchListener(object : View.OnTouchListener {
-            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                return gesture.onTouchEvent(event)
-            }
-        })
-\end{lstlisting}
+Истории реализованы наподобии Instagram, при нажатии на отдельную историю открывается отдельный фрагмент StoryFragment. Программная реализация включает в себя обработку жестов нажатий для переключения историй вперед и назад, данная логика реализуется с помощью класса GestureDetectorCompat (см. листинг~\ref{lst:add:a_7}). По нажатию на экран данный класс получает координаты нажатия, после этого происходит сравнение с шириной экрана, после данного действия алгоритм решает пролистать назад истории или вперед.
 
 Блок последних новостей выполнен в виде вертикального списка с переходом на статью по нажатию на отдельный элемент списка. Получение списка новостей происходит с помощью запроса на отдельный сервер, где хранятся все последние новости игровой индустрии. Данные лежат в формате XML, соответственно преобразование данных происходит из этого формата с помощью SimpleXmlConverter из библиотеки Retrofit. Данный формат требует отдельной обработки в доменных классах приложения, рассмотрим класс RssChannel (см. листинг~\ref{lst:explore_rss}). В данном классе используются аннотации @Root, @Element, @ElementList, что соответствуют отдельным элементам целевого XML файла и позволяет XML преобразователю правильно обрабатывать файлы и переносить их в доменную область приложения. 
 
@@ -946,7 +478,7 @@ public class RssChannel
 }
 \end{lstlisting}
 
-\subsubsection{Модуль избранного}~\par
+\undersection{Модуль избранного}~\par
 Экран избранного состоит из двух вкладок Deals и Games. Данные вкладки показывают все понравившиеся пользователю предложения по играм и сами игры. Добавление в избранное реализовано сохранением в локальную базу данных необходимых для отображения полей с индентификатором пользователя который добавил эти предложения в избранное. Примеры пользовательского интерфейса представлены на рисунках~\ref{fig:arch:favorites_1} и ~\ref{fig:arch:favorites_2}.
 
 \begin{figure}[H]
@@ -963,87 +495,9 @@ public class RssChannel
    \label{fig:arch:favorites_2}
 \end{figure}
 
-Помимо списков, в реализации присутствуют отдельные методы для загрузки картинок с помощью библиотеки Glide. В работе написано множество методов для их загрузки с множеством опций в классе UriBindingAdapter (см. листинг~\ref{lst:favorites_images}). Класс реализует одну из функций основных библиотек Android - DataBinding. Данная функциональность позволяет использовать методы прямо в коде интерфейса XML, что является удобным сокращением и повышает переиспользуемость методов.
+Помимо списков, в реализации присутствуют отдельные методы для загрузки картинок с помощью библиотеки Glide. В работе написано множество методов для их загрузки с множеством опций в классе UriBindingAdapter (см. листинг~\ref{lst:add:a_8}). Класс реализует одну из функций основных библиотек Android - DataBinding. Данная функциональность позволяет использовать методы прямо в коде интерфейса XML, что является удобным сокращением и повышает переиспользуемость методов.
 
-\begin{lstlisting}[language=Java,label={lst:favorites_images},caption={UriBindingAdapter}]
-object UriBindingAdapter {
-    @JvmStatic
-    @BindingAdapter(value = ["image_uri"])
-    fun setUri(imageView: ImageView, url: Uri?) {
-        Glide.with(imageView)
-            .load(url)
-            .into(imageView)
-    }
-
-    @JvmStatic
-    @BindingAdapter(value = ["image_uri", "image_placeholder"])
-    fun setUriWithPlaceholder(imageView: ImageView, url: Uri?, placeholder: Drawable) {
-        Glide.with(imageView)
-            .load(url)
-            .placeholder(placeholder)
-            .fallback(placeholder)
-            .into(imageView)
-    }
-
-    @JvmStatic
-    @BindingAdapter(value = ["image_uri", "image_placeholder", "image_radius"])
-    fun setUriWithPlaceholderRadius(
-        imageView: ImageView,
-        url: Uri?,
-        placeholder: Drawable,
-        imageRadius: Int
-    ) {
-        Glide.with(imageView)
-            .load(url)
-            .transform(CenterCrop(), RoundedCorners(imageRadius.dp))
-            .placeholder(placeholder)
-            .fallback(placeholder)
-            .into(imageView)
-    }
-
-    @JvmStatic
-    @BindingAdapter(value = ["image_res", "image_placeholder", "image_radius"])
-    fun setResWithPlaceholderRadius(
-        imageView: ImageView,
-        @DrawableRes res: Int?,
-        placeholder: Drawable,
-        imageRadius: Int
-    ) {
-        Glide.with(imageView)
-            .load(res)
-            .transform(CenterCrop(), RoundedCorners(imageRadius.dp))
-            .placeholder(placeholder)
-            .fallback(placeholder)
-            .into(imageView)
-    }
-
-    @JvmStatic
-    @BindingAdapter(value = ["circle_image_uri"])
-    fun setCircleUri(imageView: ImageView, url: Uri?) {
-        url?.let {
-            Glide.with(imageView)
-                .load(url)
-                .circleCrop()
-                .into(imageView)
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter(value = ["circle_image_uri", "placeholder"])
-    fun setCircleUriWithPlaceholder(imageView: ImageView, url: Uri?, placeholder: Drawable) {
-        url?.let {
-            Glide.with(imageView)
-                .load(url)
-                .circleCrop()
-                .placeholder(placeholder)
-                .fallback(placeholder)
-                .into(imageView)
-        }
-    }
-}
-\end{lstlisting}
-
-При нажатии на сохраненную игру открывается соответствующий экран с информацией об этом предложении. Пример пользовательского интерфейса представлен на рисунке~\ref{fig:arch:favorites_3}. Данный экран включает в себя название, возможность добавить и удалить из избранного, лучшую цену за все времена, ссылку на Steam и Metacritic, а так же список магазинов в которых эту игру можно купить и по каким ценам.
+При нажатии на сохраненную игру открывается соответствующий экран с информацией об этом предложении. Пример пользовательского интерфейса представлен на рисунке~\ref{fig:arch:favorites_3}. Данный экран включает в себя название, возможность добавить и удалить из избранного, лучшую цену за все времена, ссылку на Steam и Metacritic, а также список магазинов в которых эту игру можно купить и по каким ценам.
 
 \begin{figure}[H]
  \centering
@@ -1052,7 +506,7 @@ object UriBindingAdapter {
    \label{fig:arch:favorites_3}
 \end{figure}
 
-Если пользователь нажмёт на сохраненное предложение, то откроется экран с деталями об этом предложении. Пример пользовательского интерфейса представлен на рисунке~\ref{fig:arch:favorites_4}. На экране предложения присутствует лучшая цена за все времена, цена игры в магазине к которому предложение соответствует, а так же индикация того, является ли это предложение лучшим среди магазинов. Если предложение является лучшим, то соответствующие сообщение показывается пользователю, если нет, то показывается список магазинов в котором эту игру можно купить по более дешевой цене.
+Если пользователь нажмёт на сохраненное предложение, то откроется экран с деталями об этом предложении. Пример пользовательского интерфейса представлен на рисунке~\ref{fig:arch:favorites_4}. На экране предложения присутствует лучшая цена за все времена, цена игры в магазине к которому предложение соответствует, а также индикация того, является ли это предложение лучшим среди магазинов. Если предложение является лучшим, то соответствующие сообщение показывается пользователю, если нет, то показывается список магазинов в котором эту игру можно купить по более дешевой цене.
 
 \begin{figure}[H]
  \centering
@@ -1062,8 +516,8 @@ object UriBindingAdapter {
 \end{figure}
 
 
-\subsubsection{Модуль поиска}~\par
-Пользовательский интерфейс и программная реализация схожа с модулем избранного, за исключением наличия фильтров и возможности поиска. Приложение делает запросы на списки игр и предлжений вместе с фильтрами и поисковой строкой задаваемой пользователем. Стоит отметить, что поисковая строка реализована с соблюдением Google Material Design и содержит историю поисковых запросов пользователя, а так же имеет возможность голосового ввода. Пример пользовательского интерфейса истории поисковых запросов представлен на рисунке~\ref{fig:arch:search_1}.
+\undersection{Модуль поиска}~\par
+Пользовательский интерфейс и программная реализация схожа с модулем избранного, за исключением наличия фильтров и возможности поиска. Приложение делает запросы на списки игр и предлжений вместе с фильтрами и поисковой строкой задаваемой пользователем. Стоит отметить, что поисковая строка реализована с соблюдением Google Material Design и содержит историю поисковых запросов пользователя, а также имеет возможность голосового ввода. Пример пользовательского интерфейса истории поисковых запросов представлен на рисунке~\ref{fig:arch:search_1}.
 
 \begin{figure}[H]
  \centering
@@ -1072,7 +526,7 @@ object UriBindingAdapter {
    \label{fig:arch:search_1}
 \end{figure}
 
-\subsubsection{Модуль магазинов}~\par
+\undersection{Модуль магазинов}~\par
 Модуль магазинов реализует получения списка всех доступных магазинов и возможность включать и отключать их при работе с приложением. Если пользователь выключит с помощью нажатия на кнопку какой-либо магазин, то он больше не будет участвовать в ответах выдываемых пользователю. Магазины могут работать в режиме без подключения к сети, для этого при получении магазинов производится их кеширование в локальную базу данных. При нажатии на один из магазинов открывается страница с предложениями только этого магазина. Примеры пользовательского интерфейса представлены на рисунках~\ref{fig:arch:stores_1} и ~\ref{fig:arch:stores_2}.
 
 \begin{figure}[H]
@@ -1089,8 +543,8 @@ object UriBindingAdapter {
    \label{fig:arch:stores_2}
 \end{figure}
 
-\subsubsection{Модуль аккаунта}~\par
-Модуль относящийся к настройкам самого пользователя и социальным функциям. Данный модуль аккаунта состоит из 6 экранов.
+\undersection{Модуль аккаунта}~\par
+Модуль относящийся к настройкам самого пользователя и социальным функциям. Данный модуль аккаунта состоит из 6 экранов:
 
 \begin{itemize}
     \item основной экран пользователя;
@@ -1235,48 +689,7 @@ private fun dispatchTakePictureFromCameraIntent() {
 \end{lstlisting}
 
 \subsection{Безопасность}
-Для обеспечения безопасности чувствительных данных была использована Android библиотека Security для шифрования пользовательских настроек приложения. Логика по взаимодействию с этой библиотекой реализована в классе PreferenceDataSource (см. листинг~\ref{lst:prefs_security}).
-
-\begin{lstlisting}[language=Java,label={lst:prefs_security},caption={PreferenceDataSource}]
-class PreferenceDataSource(val context: Context) {
-
-    private val masterKeyAlias = MasterKey
-        .Builder(context)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .build()
-
-    private val cryptoPreferences = EncryptedSharedPreferences.create(
-        context,
-        "secret_shared_prefs",
-        masterKeyAlias,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
-
-    private val notifications: String = context.getString(R.string.pref_notifications)
-    private val notificationsDefault: Boolean =
-        context.getString(R.string.pref_notifications_default).toBoolean()
-    var notificationsEnabled: Boolean
-        get() = cryptoPreferences.getBoolean(notifications, notificationsDefault)
-        set(value) {
-            val editor = cryptoPreferences.edit()
-            editor.putBoolean(notifications, value)
-            editor.apply()
-        }
-
-    private val needToShowOnboarding: String =
-        context.getString(R.string.pref_need_to_show_onboarding)
-    private val needToShowOnboardingDefault: Boolean =
-        context.getString(R.string.pref_need_to_show_onboarding_default).toBoolean()
-    var onboardingEnabled: Boolean
-        get() = cryptoPreferences.getBoolean(needToShowOnboarding, needToShowOnboardingDefault)
-        set(value) {
-            val editor = cryptoPreferences.edit()
-            editor.putBoolean(needToShowOnboarding, value)
-            editor.apply()
-        }
-}
-\end{lstlisting}
+Для обеспечения безопасности чувствительных данных была использована Android библиотека Security для шифрования пользовательских настроек приложения. Логика по взаимодействию с этой библиотекой реализована в классе PreferenceDataSource (см. листинг~\ref{lst:add:a_9}).
 
 На серверной стороне для Firebase Storage и Firestore были написаны правила, которые не позволяют пользователям получать доступ ко всем данным, а только для их части, что соответствует их уникальному идентификатору (см. листинг~\ref{lst:firebase_security}).
 
@@ -1295,7 +708,7 @@ service cloud.firestore {
 \subsection{Варианты использования}
 Далее будут рассмотрены основные варианты использования разработанного мобильного приложения.
 
-\subsubsection{ВИ Создание учётной записи}~\par
+\undersection{ВИ Создание учётной записи}~\par
 \label{use:reg}
 Описание ВИ: Пользователь имеет возможность при желании создать личную учётную запись.
  
@@ -1303,26 +716,26 @@ service cloud.firestore {
  
 Основной поток действий:
 \begin{itemize}
-   \item пользователь нажимает кнопку "Register";
+   \item пользователь нажимает кнопку «Register»;
    \item пользователь вводит электронную почту, имя пользователя, пароль.
 \end{itemize}
  
-Ограничения: различные ограничения, установленные провайдером аутентификации Firebase, а так же клиентским приложением.
+Ограничения: различные ограничения, установленные провайдером аутентификации Firebase, а также клиентским приложением.
  
-\subsubsection{ВИ Использование своей учётной записи}~\par
+\undersection{ВИ Использование своей учётной записи}~\par
 Описание ВИ: Пользователь имеет возможность использовать личную учётную запись.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}.
+Предусловия основного потока действий: у пользователя имеется учётная запись.
  
 Основной поток действий:
 \begin{itemize}
-   \item пользователь нажимает кнопку "SIGN IN";
+   \item пользователь нажимает кнопку «SIGN IN»;
    \item пользователь вводит электронную почту и пароль.
 \end{itemize}
  
-Ограничения: различные ограничения, установленные провайдером аутентификации Firebase, а так же клиентским приложением.
+Ограничения: различные ограничения, установленные провайдером аутентификации Firebase, а также клиентским приложением.
 
-\subsubsection{ВИ Восстановление пароля}~\par
+\undersection{ВИ Восстановление пароля}~\par
 \label{use:resetpassword}
 Описание ВИ: Пользователь имеет возможность восстановить пароль для своей учетной записи.
  
@@ -1330,17 +743,17 @@ service cloud.firestore {
  
 Основной поток действий:
 \begin{itemize}
-   \item пользователь нажимает кнопку "Forgot password?";
-   \item пользователь вводит емейл своей учетной записи;
-   \item клиент получает письмо на емейл с восстановлением пароля.
+   \item пользователь нажимает кнопку «Forgot password?»;
+   \item пользователь вводит email своей учетной записи;
+   \item клиент получает письмо на email с восстановлением пароля.
 \end{itemize}
  
-Ограничения: емейл должен быть валидным и не пустым.
+Ограничения: email должен быть валидным и не пустым.
  
-\subsubsection{ВИ Просмотр истории}~\par
+\undersection{ВИ Просмотр истории}~\par
 Описание ВИ: Пользователь имеет возможность просмотреть историю о вышедшей новинке.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}.
+Предусловия основного потока действий: у пользователя имеется учётная запись.
  
 Основной поток действий:
 \begin{itemize}
@@ -1351,11 +764,11 @@ service cloud.firestore {
  
 Ограничений нет.
 
-\subsubsection{ВИ Просмотр статьи}~\par
+\undersection{ВИ Просмотр статьи}~\par
 \label{use:join}
 Описание ВИ: Пользователь имеет возможность просмотреть свежую статью об игровой индустрии.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}.
+Предусловия основного потока действий: у пользователя имеется учётная запись.
  
 Основной поток действий:
 \begin{itemize}
@@ -1365,10 +778,10 @@ service cloud.firestore {
  
 Ограничения: пользователь должен иметь подключение к интернету.
  
-\subsubsection{ВИ Просмотр предложения}~\par
+\undersection{ВИ Просмотр предложения}~\par
 Описание ВИ: Пользователь имеет возможность просмотреть дополнительную информацию о предложении.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}.
+Предусловия основного потока действий: у пользователя имеется учётная запись.
 
 Основной поток действий:
 \begin{itemize}
@@ -1380,10 +793,10 @@ service cloud.firestore {
  
 Ограничения: пользователь должен иметь подключение к интернету.
  
-\subsubsection{ВИ Просмотр игры}~\par
+\undersection{ВИ Просмотр игры}~\par
 Описание ВИ: Пользователь имеет возможность просмотреть дополнительную информацию об игре.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}.
+Предусловия основного потока действий: у пользователя имеется учётная запись.
 
 Основной поток действий:
 \begin{itemize}
@@ -1395,11 +808,11 @@ service cloud.firestore {
  
 Ограничения: пользователь должен иметь подключение к интернету.
  
-\subsubsection{ВИ Просмотр списка магазинов}~\par
+\undersection{ВИ Просмотр списка магазинов}~\par
 \label{use:showstores}
 Описание ВИ: Пользователь имеет возможность просмотреть все магазины доступные в приложении.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}.
+Предусловия основного потока действий: у пользователя имеется учётная запись.
  
 Основной поток действий:
 \begin{itemize}
@@ -1410,11 +823,11 @@ service cloud.firestore {
  
 Ограничения: пользователь должен иметь подключение к интернету.
 
-\subsubsection{ВИ Просмотр отдельного магазина}~\par
+\undersection{ВИ Просмотр отдельного магазина}~\par
 \label{use:singlestore}
 Описание ВИ: Пользователь имеет возможность просмотреть предложения конкретного магазина.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}, Пользователь просматривает список магазинов см.~\ref{use:showstores}.
+Предусловия основного потока действий: у пользователя имеется учётная запись, пользователь просматривает список магазинов.
  
 Основной поток действий:
 \begin{itemize}
@@ -1425,30 +838,30 @@ service cloud.firestore {
  
 Ограничения: пользователь должен иметь подключение к интернету.
 
-\subsubsection{ВИ Выключение магазина из фильтрации}~\par
+\undersection{ВИ Выключение магазина из фильтрации}~\par
 Описание ВИ: Пользователь имеет возможность выключить магазин из фильтрации в приложении.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}, Пользователь просматривает список магазинов см.~\ref{use:showstores}.
+Предусловия основного потока действий: у пользователя имеется учётная запись, Пользователь просматривает список магазинов.
  
 Основной поток действий:
 \begin{itemize}
-   \item пользователь нажимает на "галочку", тем самым выключая магазин из фильтрации;
+   \item пользователь нажимает на «галочку», тем самым выключая магазин из фильтрации;
    \item приложение запоминает выбор пользователя.
 \end{itemize}
 
 Альтернативный поток действий:
 \begin{itemize}
-   \item пользователь нажимает на "галочку", тем самым включая магазин в фильтрацию;
+   \item пользователь нажимает на «галочку», тем самым включая магазин в фильтрацию;
    \item приложение запоминает выбор пользователя.
 \end{itemize}
  
 Ограничений нет.
 
-\subsubsection{ВИ Поиск игр}~\par
+\undersection{ВИ Поиск игр}~\par
 \label{use:searchgames}
 Описание ВИ: Пользователь имеет возможность совершать поиск по играм с помощью поисковой строки и фильтров.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}.
+Предусловия основного потока действий: у пользователя имеется учётная запись.
  
 Основной поток действий:
 \begin{itemize}
@@ -1460,11 +873,11 @@ service cloud.firestore {
  
 Ограничения: пользователь должен иметь подключение к интернету.
 
-\subsubsection{ВИ Поиск предложений}~\par
+\undersection{ВИ Поиск предложений}~\par
 \label{use:searchdeals}
 Описание ВИ: Пользователь имеет возможность совершать поиск по предложениям с помощью поисковой строки и фильтров.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}.
+Предусловия основного потока действий: у пользователя имеется учётная запись.
  
 Основной поток действий:
 \begin{itemize}
@@ -1476,52 +889,52 @@ service cloud.firestore {
  
 Ограничения: пользователь должен иметь подключение к интернету.
 
-\subsubsection{ВИ Добавление предложения в избранное}~\par
+\undersection{ВИ Добавление предложения в избранное}~\par
 \label{use:favoritedeals}
 Описание ВИ: Пользователь имеет возможность добавить в избранное предложение.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}, Пользователь совершил поиск по предложениям см.~\ref{use:searchdeals}.
+Предусловия основного потока действий: у пользователя имеется учётная запись, пользователь совершил поиск по предложениям.
  
 Основной поток действий:
 \begin{itemize}
    \item пользователь нажимает на предложение из списка;
-   \item пользователь нажимает на "сердце" и добавляет предложение в избранное.
+   \item пользователь нажимает на «сердце» и добавляет предложение в избранное.
    \item приложение запоминает выбор пользователя.
 \end{itemize}
 
 Альтернативный поток действий:
 \begin{itemize}
    \item пользователь нажимает на предложение из списка;
-   \item пользователь нажимает на "сердце" и удаляет предложение из избранного.
+   \item пользователь нажимает на «сердце» и удаляет предложение из избранного.
    \item приложение запоминает выбор пользователя.
 \end{itemize}
 
 Ограничения: пользователь должен иметь подключение к интернету.
 
-\subsubsection{ВИ Добавление игры в избранное}~\par
+\undersection{ВИ Добавление игры в избранное}~\par
 \label{use:favoritegames}
 Описание ВИ: Пользователь имеет возможность добавить в избранное игру.
  
-Предусловия основного потока действий: у пользователя имеется учётная запись см.~\ref{use:reg}, Пользователь совершил поиск по играм см.~\ref{use:searchgames}.
+Предусловия основного потока действий: у пользователя имеется учётная запись, пользователь совершил поиск по играм.
  
 Основной поток действий:
 \begin{itemize}
    \item пользователь нажимает на игру из списка;
-   \item пользователь нажимает на "сердце" и добавляет игру в избранное.
+   \item пользователь нажимает на «сердце» и добавляет игру в избранное.
    \item приложение запоминает выбор пользователя.
 \end{itemize}
 
 Альтернативный поток действий:
 \begin{itemize}
    \item пользователь нажимает на игру из списка;
-   \item пользователь нажимает на "сердце" и удаляет игру из избранного.
+   \item пользователь нажимает на «сердце» и удаляет игру из избранного.
    \item приложение запоминает выбор пользователя.
 \end{itemize}
 
 Ограничения: пользователь должен иметь подключение к интернету.
 
 \subsection{Тестирование приложения}
-Для оптимизации мобильного приложения использовалось ПО из проекта Leak Canary. В рамках данного проекта разработан набор различных программ, которые помогают автоматизировать процесс тестирования мобильных приложений. Для данного проекта использовались JUnit и Espresso - универсальные библиотеки для тестирования мобильных приложений.
+Для оптимизации мобильного приложения использовалось ПО из проекта Leak Canary. В рамках данного проекта разработан набор различных программ, которые помогают автоматизировать процесс тестирования мобильных приложений. Для данного проекта использовались JUnit и Espresso — универсальные библиотеки для тестирования мобильных приложений.
  
 Также было проведено ручное тестирование приложения, так как при помощи тестов Android некоторые моменты протестировать затруднительно. В рамках ручного тестирования было проведено дымовое тестирование возможностей приложения и механизмов синхронизации.
 

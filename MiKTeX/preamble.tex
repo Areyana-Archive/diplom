@@ -173,7 +173,11 @@
     }
 \makeatother
 
-
+\makeatletter
+\newcommand{\undersection}[1]{%
+  \par\begingroup\itshape #1\endgroup
+}
+\makeatother
 
 % Зачем: Задает стиль библиографии
 % Почему: Пункт 2.8.6 Требований по оформлению пояснительной записки.
@@ -521,4 +525,3 @@ title=\lstname % show the filename of files included with \lstinputlisting; also
 }
 
 \makeatletter \renewcommand\@biblabel[1]{#1.} \makeatother
-
