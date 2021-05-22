@@ -125,7 +125,7 @@ abstract class BaseActivity<T : BaseViewModel> : BaseActivity() {
     }
 }
 \end{lstlisting}
-\hfill \break
+%\hfill \break
 \begin{lstlisting}[language=Java,label={lst:add:a_2}, caption={BaseFragment}]
 abstract class BaseFragment<T : BaseViewModel> : BaseFragment() {
     protected abstract val viewModel: T
@@ -198,7 +198,7 @@ abstract class BaseFragment<T : BaseViewModel> : BaseFragment() {
     }
 }
 \end{lstlisting}
-\hfill \break
+%\hfill \break
 \begin{lstlisting}[language=Java,label={lst:add:a_3}, caption={BaseViewModel}]
 open class BaseViewModel : ViewModel(), CoroutineScope {
 
@@ -271,7 +271,7 @@ open class BaseViewModel : ViewModel(), CoroutineScope {
     }
 }
 \end{lstlisting}
-\hfill \break
+%\hfill \break
 \begin{lstlisting}[language=Java,label={lst:add:a_4}, caption={Koin}]
 var gatewayModule = module {
     single<PreferencesGateway> {
@@ -315,7 +315,7 @@ var gatewayModule = module {
     }
 }
 \end{lstlisting}
-\hfill \break
+%\hfill \break
 \begin{lstlisting}[language=Java,label={lst:add:a_5}, caption={AndroidManifest.xml}]]
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -383,7 +383,7 @@ var gatewayModule = module {
 
 </manifest>
 \end{lstlisting}
-\hfill \break
+%\hfill \break
 \begin{lstlisting}[language=Java,label={lst:add:a_6}, caption={AuthSignInViewModel}]
 class AuthSignInViewModel(
     private val validateEmail: ValidateEmail,
@@ -460,7 +460,36 @@ class AuthSignInViewModel(
     }
 }
 \end{lstlisting}
-\hfill \break
+%\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_10}, caption={DealsPagingSource}]
+class DealsPagingSource(
+    private val getDeals: GetDeals,
+    private val title: String? = null,
+    private val ids: List<String>? = null,
+    private val metacritic: Int? = null
+) : PagingSource<Int, Deal>() {
+    override fun getRefreshKey(state: PagingState<Int, Deal>): Int? {
+        return state.anchorPosition
+    }
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Deal> {
+        return try {
+            val startNumber = params.key ?: 0
+            val endNumber = startNumber + 1
+            val response = getDeals(startNumber, title, ids, metacritic)
+
+            LoadResult.Page(
+                data = response,
+                prevKey = null,
+                nextKey = if (response.isEmpty()) null else endNumber
+            )
+        } catch (e: Exception) {
+            LoadResult.Error(e)
+        }
+    }
+}
+\end{lstlisting}
+%\hfill \break
 \begin{lstlisting}[language=Java,label={lst:add:a_7}, caption={GestureDetectorCompat}]
 class AuthSignInViewModel(
     private val validateEmail: ValidateEmail,
@@ -537,7 +566,7 @@ class AuthSignInViewModel(
     }
 }
 \end{lstlisting}
-\hfill \break
+%\hfill \break
 \begin{lstlisting}[language=Java,label={lst:add:a_8}, caption={UriBindingAdapter}]
 object UriBindingAdapter {
     @JvmStatic
@@ -615,7 +644,44 @@ object UriBindingAdapter {
     }
 }
 \end{lstlisting}
-\hfill \break
+%\hfill \break
+\begin{lstlisting}[language=Java,label={lst:add:a_11}, caption={Методы для взаимодействия с камерой}]
+private fun dispatchTakePictureFromCameraIntent() {
+        avatarUri =
+            getOutputMediaFile("avatar_${OffsetDateTime.now().toInstant().toEpochMilli()}.jpg")
+        openTakePictureFromCamera.launch(avatarUri)
+    }
+
+    private val openTakePictureFromCamera =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { result ->
+            if (result) {
+                viewModel.addAvatarEvent(avatarUri!!)
+            }
+        }
+
+    private val openTakePictureFromGallery =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+            avatarUri = result
+            viewModel.addAvatarEvent(avatarUri!!)
+        }
+
+    private val checkCameraPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+            if (result) {
+                dispatchTakePictureFromCameraIntent()
+            } else {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                    openGoToSettingPermissionDialog(openSettingsPermissionAppActivity)
+                }
+            }
+        }
+
+    private val openSettingsPermissionAppActivity: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            checkCameraPermission.launch(Manifest.permission.CAMERA)
+        }
+\end{lstlisting}
+%\hfill \break
 \begin{lstlisting}[language=Java,label={lst:add:a_9}, caption={AhriMessagingService}, caption={PreferenceDataSource}]
 object UriBindingAdapter {
     @JvmStatic
