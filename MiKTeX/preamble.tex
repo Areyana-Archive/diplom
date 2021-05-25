@@ -216,7 +216,7 @@
 \DeclareCaptionLabelFormat{stbtable}{Таблица #2}
 \DeclareCaptionLabelSeparator{stb}{~--~}
 \captionsetup{labelsep=stb}
-\captionsetup[figure]{labelformat=stbfigure,justification=centering}
+\captionsetup[figure]{labelformat=stbfigure,justification=centering,aboveskip=1.7em}
 \captionsetup[table]{labelformat=stbtable,justification=raggedright}
 \renewcommand{\thesubfigure}{\asbuk{subfigure}}
 
@@ -251,7 +251,7 @@
     %\tabularx{\textwidth-\fivecharsapprox}{@{}ll@{ --- } X }
     %% без отступа, СТП-01 2013
     \noindent 
-    \tabularx{\textwidth}{@{}ll@{ --- } X }
+    \tabularx{\textwidth}{@{}ll@{ -- } X }
     }
     { 
     \\[\parsep]
